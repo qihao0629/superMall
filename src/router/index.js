@@ -11,7 +11,7 @@ const Home = () => import('@/views/home/Home.vue')
 const Category = () => import('@/views/category/Category.vue')
 const Cart = () => import('@/views/cart/Cart.vue')
 const Profile= () => import('@/views/profile/Profile.vue')
-
+const Detail= () => import('@/views/detail/Detail.vue')
 Vue.use(VueRouter)
 
 const routes = [
@@ -34,6 +34,10 @@ const routes = [
   {
     path: '/profile',
     component: Profile
+  },
+  {
+    path: '/detail',
+    component: Detail
   }
 ]
 
@@ -42,5 +46,17 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+const VueRouterPush = VueRouter.prototype.push
+const VueRouterReplace = VueRouter.prototype.replace
+
+VueRouter.prototype.push = function push (to) {
+  return VueRouterPush.call(this, to).catch(err => {
+    console.log(err);
+  })
+}
+VueRouter.prototype.replace = function replace (to) {
+  return VueRouterReplace.call(this, to).catch(err => err)
+}
 
 export default router

@@ -1,9 +1,9 @@
 <template>
-  <div class="goods-list-item">
-    <img :src="goodsItem.show.img" alt="" @load="imageLoad">
+  <div class="goods-list-item" @click="goodsItemClick">
+    <img v-lazy="getImg" :key="getImg" alt="" @load="imageLoad">
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
-      <span class="price">{{goodsItem.price}}</span>
+      <span class="price">¥{{goodsItem.price}}</span>
       <span class="collect">{{goodsItem.cfav}}</span>
     </div>
   </div>
@@ -22,7 +22,19 @@ export default {
   },
   methods: {
     imageLoad() {
-      // this.$bus.$emit('itemImageLoad')
+      this.$bus.$emit('itemImageLoad')
+    },
+    goodsItemClick() {
+      let iid = this.getIid
+      this.$router.push({path: '/detail', query: {iid}})
+    }
+  },
+  computed: {
+    getImg() {
+      return (this.goodsItem.image || this.goodsItem.img || this.goodsItem.show.img)
+    },
+    getIid() {
+      return this.goodsItem.iid || this.goodsItem.item_id
     }
   }
 }

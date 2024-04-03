@@ -6,17 +6,16 @@ export function request(config) {
     headers: { 'apifoxToken': "K5FOccF9Y4NtkbKZK0ib2WnWnm4bVdQO" },
     timeout: 5000
   })
-
   instance.interceptors.request.use(data => {
     return data
   }, err => {
+    return err
   })
   // 响应拦截
   instance.interceptors.response.use(res => {
     return res.data
   }, err => {
-    console.log(err);
+    return err
   })
-
   return instance(config)
 }

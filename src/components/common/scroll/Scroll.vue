@@ -17,9 +17,9 @@ export default {
   props: {
     probeType: {
       type: Number,
-      default: 0
+      default: 3
     },
-    pullingType: {
+    pullUpLoad: {
       type: Boolean,
       default: false
     }
@@ -31,18 +31,23 @@ export default {
   },
   mounted() {
     this.bs = new BScroll(this.$refs.wrapper, {
-      // 这个属性也能解决scroll滑动的问题
-      observeDOM: true,
+      // 这个属性目前虽然也能解决scroll滑动的问题，但是切换页面的时候，会触发上拉加载的方法，不知道是什么问题，待探索
+      // observeDOM: true,
       probeType: this.probeType,
+
       click: true,
-      pullUpLoad: false
+      pullUpLoad: this.pullUpLoad
     })
-    this.bs.on('scroll', (position) => {
-      this.$emit('scroll',position)
-    })
-    this.bs.on('pullingUp', () => {
-      this.$emit('pullingUp')
-    })
+    if (this.probeType === 2 || this.probeType ===3) {
+      this.bs.on('scroll', (position) => {
+        this.$emit('scroll',position)
+      })
+    }
+    if (this.pullUpLoad) {
+      this.bs.on('pullingUp', () => {
+        this.$emit('pullingUp')
+      })
+    }
   },
   methods: {
     scrollTo(x, y, time = 300) {
@@ -53,7 +58,10 @@ export default {
       this.bs && this.bs.finishPullUp && this.bs.finishPullUp()
     },
     refresh() {
-      this.bs && this.bs.refresh && this.bs.refresh()
+      this.bs.refresh()
+    },
+    getScrollY() {
+      return this.bs.y ? this.bs.y : 0
     }
   }
 }
